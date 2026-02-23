@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAppDispatch } from './app/hooks';
 import classNames from 'classnames';
 
 import 'bulma/css/bulma.css';
@@ -10,16 +11,22 @@ import { PostDetails } from './components/PostDetails';
 import { UserSelector } from './components/UserSelector';
 import { Loader } from './components/Loader';
 import { getUserPosts } from './api/posts';
+import { fetchUsers } from './features/users/usersSlice';
 import { User } from './types/User';
 import { Post } from './types/Post';
 
 export const App: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [hasError, setError] = useState(false);
 
   const [author, setAuthor] = useState<User | null>(null);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   function loadUserPosts(userId: number) {
     setLoaded(false);
