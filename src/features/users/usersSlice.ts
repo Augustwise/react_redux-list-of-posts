@@ -5,11 +5,13 @@ import { RootState } from '../../app/store';
 
 export interface UsersState {
   items: User[];
+  selectedAuthor: User | null;
   status: 'start' | 'pending' | 'fulfilled' | 'rejected';
 }
 
 const initialState: UsersState = {
   items: [],
+  selectedAuthor: null,
   status: 'start',
 };
 
@@ -22,7 +24,12 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
 export const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedAuthor: (state, action: { payload: User | null }) => ({
+      ...state,
+      selectedAuthor: action.payload,
+    }),
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchUsers.pending, state => ({
@@ -41,7 +48,11 @@ export const usersSlice = createSlice({
   },
 });
 
+export const { setSelectedAuthor } = usersSlice.actions;
+
 export const selectUsers = (state: RootState) => state.users.items;
 export const selectUsersStatus = (state: RootState) => state.users.status;
+export const selectSelectedAuthor = (state: RootState) =>
+  state.users.selectedAuthor;
 
 export default usersSlice.reducer;
