@@ -10,18 +10,20 @@ import { PostsList } from './components/PostsList';
 import { PostDetails } from './components/PostDetails';
 import { UserSelector } from './components/UserSelector';
 import { Loader } from './components/Loader';
+import { fetchUsers } from './features/users/usersSlice';
 import {
-  fetchUsers,
   selectSelectedAuthor,
   setSelectedAuthor,
-} from './features/users/usersSlice';
+} from './features/author/authorSlice';
 import {
   fetchUserPosts,
   clearPosts,
   selectPosts,
+} from './features/posts/postsSlice';
+import {
   selectSelectedPost,
   setSelectedPost,
-} from './features/posts/postsSlice';
+} from './features/selectedPost/selectedPostSlice';
 import { clearComments } from './features/comments/commentsSlice';
 
 export const App: React.FC = () => {

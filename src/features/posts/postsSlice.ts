@@ -7,14 +7,12 @@ export interface PostsState {
   loaded: boolean;
   hasError: boolean;
   items: Post[];
-  selectedPost: Post | null;
 }
 
 const initialState: PostsState = {
   loaded: false,
   hasError: false,
   items: [],
-  selectedPost: null,
 };
 
 export const fetchUserPosts = createAsyncThunk(
@@ -35,11 +33,6 @@ export const postsSlice = createSlice({
       loaded: true,
       hasError: false,
       items: [],
-      selectedPost: null,
-    }),
-    setSelectedPost: (state, action: { payload: Post | null }) => ({
-      ...state,
-      selectedPost: action.payload,
     }),
   },
   extraReducers: builder => {
@@ -48,7 +41,6 @@ export const postsSlice = createSlice({
         ...state,
         loaded: false,
         hasError: false,
-        selectedPost: null,
       }))
       .addCase(fetchUserPosts.fulfilled, (state, action) => ({
         ...state,
@@ -65,10 +57,8 @@ export const postsSlice = createSlice({
   },
 });
 
-export const { clearPosts, setSelectedPost } = postsSlice.actions;
+export const { clearPosts } = postsSlice.actions;
 
 export const selectPosts = (state: RootState) => state.posts;
-export const selectSelectedPost = (state: RootState) =>
-  state.posts.selectedPost;
 
 export default postsSlice.reducer;
