@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import classNames from 'classnames';
 
@@ -19,21 +19,24 @@ import {
   fetchUserPosts,
   clearPosts,
   selectPosts,
+  selectSelectedPost,
+  setSelectedPost,
 } from './features/posts/postsSlice';
-import { Post } from './types/Post';
+import { clearComments } from './features/comments/commentsSlice';
 
 export const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const author = useAppSelector(selectSelectedAuthor);
   const posts = useAppSelector(selectPosts);
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const selectedPost = useAppSelector(selectSelectedPost);
 
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
   useEffect(() => {
-    setSelectedPost(null);
+    dispatch(setSelectedPost(null));
+    dispatch(clearComments());
 
     if (author) {
       dispatch(fetchUserPosts(author.id));
@@ -85,7 +88,12 @@ export const App: React.FC = () => {
                   <PostsList
                     posts={posts.items}
                     selectedPostId={selectedPost?.id}
-                    onPostSelected={setSelectedPost}
+                    onPostSelected={post => {
+                      dispatch(setSelectedPost(post));
+                      if (!post) {
+                        dispatch(clearComments());
+                      }
+                    }}
                   />
                 )}
               </div>
